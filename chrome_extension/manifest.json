@@ -1,0 +1,27 @@
+{
+  "manifest_version": 2,
+  "name": "Online Judge Helper",
+  "description": "",
+  "version": "0.0.1",
+  "permissions": [
+    "http://localhost:4567/"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["http://judge.u-aizu.ac.jp/onlinejudge/description*"],
+      "js": ["jquery.js", "client.js", "judge.u-aizu.ac.jp.js"]
+    },
+    {
+      "matches": ["http://*.contest.atcoder.jp/tasks/*"],
+      "js": ["jquery.js", "client.js", "contest.atcoder.jp.js"]
+    },
+    {
+      "matches": ["http://poj.org/problem?*"],
+      "js": ["jquery.js", "client.js", "poj.org.js"]
+    },
+    {
+      "matches": ["http://codeforces.com/problemset/problem/*"],
+      "js": ["jquery.js", "client.js", "codeforces.com.js"]
+    }
+  ]
+}
