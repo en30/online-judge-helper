@@ -1,8 +1,8 @@
 require 'open3'
 ignore /#/
 
-def run_test(path, lang = '')
-  stdout, stderr, status = Open3.capture3("bundle exec ruby #{path} #{lang}")
+def run_test(id, lang = '')
+  stdout, stderr, status = Open3.capture3("bundle exec rake test[#{id},#{lang}]")
   if status == 0
     TerminalNotifier::Guard.success '', title: 'All tests passed!'
   else
@@ -13,6 +13,6 @@ def run_test(path, lang = '')
 end
 
 guard :shell do
-  watch(/^problems\/(.+)\.([\w]+)$/) { |m| run_test "tests/#{m[1]}.rb", m[2] }
-  watch(/^tests\/.+.rb$/) { |m| run_test(m[0]) }
+  watch(/^problems\/(.+)\.([\w]+)$/) { |m| run_test m[1], m[2] }
+  watch(/^tests\/(.+).yml$/) { |m| run_test(m[1]) }
 end

@@ -2,7 +2,7 @@
   $.appendSolveButton().on('click', function() {
     var params ={
       site: 'atcoder',
-      time_limit: $('#task-statement').prev().text().match(/(\d+)sec/)[1],
+      time_limit: parseInt($('#task-statement').prev().text().match(/(\d+)sec/)[1], 10),
       id: location.pathname.split('/').pop(),
       samples: []
     };

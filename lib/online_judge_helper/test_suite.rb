@@ -61,7 +61,7 @@ module OnlineJudgeHelper
     end
 
     def compile
-      _, stderr, status = Open3.capture3("#{config.compile} #{config.problem_file}")
+      _, stderr, status = Open3.capture3("#{@config.compile} #{@config.problem_file}")
       @compilation_error = (status != 0)
       @error_message = stderr
     end

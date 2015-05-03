@@ -3,6 +3,7 @@ require 'sinatra/config_file'
 require 'sinatra/reloader'
 require 'pry'
 require 'fileutils'
+require 'hashie'
 
 module OnlineJudgeHelper
   class App < Sinatra::Base
@@ -15,7 +16,7 @@ module OnlineJudgeHelper
 
     post '/problem' do
       site = File.basename(params['site']) || 'unknown'
-      time_limit = params['time_limit'] || 2
+      time_limit = (params['time_limit'] || 2).to_f
       id = File.basename(params['id'])
       editor = settings.editor || ENV['EDITOR']
 
@@ -24,7 +25,7 @@ module OnlineJudgeHelper
       FileUtils.mkdir_p problems_path
       FileUtils.mkdir_p tests_path
       problem_file = "#{problems_path}/#{id}.#{settings.default_lang}"
-      test_file = "#{tests_path}/#{id}.rb"
+      test_file = "#{tests_path}/#{id}.yml"
 
       system "#{editor} #{problem_file} &"
 
@@ -32,11 +33,7 @@ module OnlineJudgeHelper
         samples = params['samples'].map  do |i, sample|
           { title: "Sample #{i}" }.merge(Hashie.symbolize_keys sample)
         end
-        File.open test_file, 'w' do |f|
-          f.puts "require_relative '../../test_helper'"
-          f.puts '__END__'
-          f.puts YAML.dump(time_limit: time_limit, samples: samples)
-        end
+        File.write test_file, YAML.dump(time_limit: time_limit, samples: samples)
       end
       200
     end

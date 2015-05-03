@@ -2,7 +2,7 @@
   $.appendSolveButton().on('click', function() {
     var params ={
       site: 'codeforces',
-      time_limit: $('.time-limit').text().match(/(\d+) seconds/)[1],
+      time_limit: parseInt($('.time-limit').text().match(/(\d+) seconds/)[1], 10),
       id: location.pathname.split('/').slice(3).join('_'),
       samples: []
     };

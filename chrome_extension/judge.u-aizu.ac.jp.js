@@ -2,7 +2,7 @@
   $.appendSolveButton().on('click', function() {
     var params ={
       site: 'aoj',
-      time_limit: $('h1.title').next().text().match(/(\d+) sec/)[1],
+      time_limit: parseInt($('h1.title').next().text().match(/(\d+) sec/)[1], 10),
       id: location.search.match(/id=(.*?)(?:&|$)/m)[1],
       samples: []
     };
