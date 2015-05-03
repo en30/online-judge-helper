@@ -24,7 +24,7 @@ module OnlineJudgeHelper
       tests_path = File.expand_path("./tests/#{site}")
       FileUtils.mkdir_p problems_path
       FileUtils.mkdir_p tests_path
-      problem_file = "#{problems_path}/#{id}.#{settings.default_lang}"
+      problem_file = "#{problems_path}/#{id}.#{settings.default_language}"
       test_file = "#{tests_path}/#{id}.yml"
 
       system "#{editor} #{problem_file} &"

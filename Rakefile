@@ -14,7 +14,7 @@ end
 desc 'Run a test specified by argument'
 task :test, %w{id language} do |_, args|
   test_file = File.expand_path("tests/#{args.id}.yml")
-  config.language = args.language.empty? ? config.default_lang : args.language
+  config.language = args.language.empty? ? config.default_language : args.language
   config.problem_file = File.expand_path("problems/#{args.id}.#{config.language}")
   config.merge!(config.languages[config.language])
 

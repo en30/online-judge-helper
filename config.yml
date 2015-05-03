@@ -1,5 +1,5 @@
-default_lang: cpp
-editor: emacsclient --no-wait # if you not specify $EDITOR environment variable is used
+default_language: cpp
+editor: emacsclient --no-wait # if you not specify $EDITOR environment variable will be used
 languages:
   rb: # key used for file extension
     run: ruby
