@@ -1,5 +1,6 @@
 source "https://rubygems.org"
 
+gem "foreman"
 gem "rake"
 gem "guard"
 gem "guard-shell"
