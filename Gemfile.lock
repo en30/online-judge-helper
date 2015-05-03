@@ -5,7 +5,7 @@ GEM
     celluloid (0.16.0)
       timers (~> 4.0.0)
     coderay (1.1.0)
-    colorize (0.7.5)
+    colorize (0.7.7)
     ffi (1.9.8)
     formatador (0.2.5)
     guard (2.12.5)
@@ -21,6 +21,7 @@ GEM
     guard-shell (0.7.1)
       guard (>= 2.0.0)
       guard-compat (~> 1.0)
+    hashie (3.4.1)
     hitimes (1.2.2)
     listen (2.10.0)
       celluloid (~> 0.16.0)
@@ -33,7 +34,7 @@ GEM
     notiffany (0.0.6)
       nenv (~> 0.1)
       shellany (~> 0.0)
-    power_assert (0.2.2)
+    power_assert (0.2.3)
     pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -66,6 +67,7 @@ GEM
     tilt (1.4.1)
     timers (4.0.1)
       hitimes
+    unindent (1.0)
 
 PLATFORMS
   ruby
@@ -74,8 +76,10 @@ DEPENDENCIES
   colorize
   guard
   guard-shell
+  hashie
   pry
   sinatra
   sinatra-contrib
   terminal-notifier-guard
   test-unit
+  unindent

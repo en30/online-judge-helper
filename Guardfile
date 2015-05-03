@@ -1,17 +1,15 @@
-
+require 'open3'
 ignore /#/
 
 def run_test(path, lang = '')
-  res = `bundle exec ruby #{path} #{lang}`
-  case $?.exitstatus
-  when 0
-    TerminalNotifier::Guard.success 'All tests passed!'
-  when 1
-    TerminalNotifier::Guard.failed 'Some tests failed'
-  when 2
-    TerminalNotifier::Guard.failed 'Compilation Error'
+  stdout, stderr, status = Open3.capture3("bundle exec ruby #{path} #{lang}")
+  if status == 0
+    TerminalNotifier::Guard.success '', title: 'All tests passed!'
+  else
+    title, message = stderr.split("\n", 2)
+    TerminalNotifier::Guard.failed message, title: title
   end
-  res
+  stdout
 end
 
 guard :shell do
