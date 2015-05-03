@@ -50,3 +50,4 @@ Icon
 a.out
 problems/*
 tests/*
+chrome_extension/jquery.js
