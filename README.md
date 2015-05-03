@@ -3,8 +3,12 @@ Online Judge Helper helps you to start solving online judge problems and to test
 
 ![Screen Cast](https://github.com/en30/online-judge-helper/raw/master/example.gif)
 
+## Features
+- Small Sinatra app to automatically create program and test file
+- Google Chrome extension to communicate with the Sinatra app
+- Watch program and test files and run test when they are changed
 
-You can uses Online Judge Helper on the sites below.
+You can use Online Judge Helper's extension on the sites below.
 
 - [AIZU ONLINE JUDGE](http://judge.u-aizu.ac.jp/onlinejudge/)
 - [AtCoder](http://atcoder.jp/)
