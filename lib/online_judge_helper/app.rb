@@ -29,11 +29,11 @@ module OnlineJudgeHelper
 
       system "#{editor} #{problem_file} &"
 
-      unless File.exist?(test_file)
-        samples = params['samples'].map  do |i, sample|
-          { title: "Sample #{i}" }.merge(Hashie.symbolize_keys sample)
-        end
-        File.write test_file, YAML.dump(time_limit: time_limit, samples: samples)
+      samples = params['samples'].map  do |i, sample|
+        { title: "Sample #{i}" }.merge(Hash[sample.map{|k,v| [k.to_sym, v] }])
+      end
+      File.open(test_file, 'w') do |f|
+        f.print(YAML.dump(time_limit: time_limit, samples: samples))
       end
       200
     end
