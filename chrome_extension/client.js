@@ -15,6 +15,10 @@
   };
 
   $.solve = function(params) {
-    $.post('http://localhost:4567/problem', params);
+    $.post('http://localhost:4567/problem', params).fail(function(res){
+      if(res.status == 0) {
+        alert('It seems that background server is not working');
+      }
+    });
   };
 })(jQuery);
