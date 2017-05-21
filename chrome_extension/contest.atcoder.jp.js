@@ -7,7 +7,7 @@
       samples: []
     };
     $("h3:contains('入力例')").each(function(){
-      var $input = $(this).next('pre'),
+      var $input = $(this).parent().find('pre'),
           $output = $input.closest('.part').next().find('pre');
       params.samples.push({input: $input.text(), output: $output.text()});
     });

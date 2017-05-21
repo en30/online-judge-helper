@@ -3,8 +3,17 @@
   "name": "Online Judge Helper",
   "description": "",
   "version": "0.0.1",
+  "background": {
+    "persistend": false,
+    "scripts": ["jquery.js", "background.js"]
+  },
   "permissions": [
-    "http://localhost:4567/"
+    "contextMenus",
+    "tabs",
+    "http://localhost:4567/",
+    "http://judge.u-aizu.ac.jp/onlinejudge/description*",
+    "http://*.contest.atcoder.jp/tasks/*",
+    "http://codeforces.com/problemset/problem/*"
   ],
   "content_scripts": [
     {
