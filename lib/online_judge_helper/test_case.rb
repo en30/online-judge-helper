@@ -41,10 +41,22 @@ module OnlineJudgeHelper
     end
 
     def run!(command, problem_file, time_limit:)
-      # https://redmine.ruby-lang.org/issues/4681
-      timeout(time_limit) do
-        timeout(time_limit) do
-          @stdout, @stderr, @status = Open3.capture3(command, problem_file, stdin_data: input)
+      @stdout, @stderr = '', ''
+      Open3.popen3(command, problem_file) do |i,o,e,w|
+        begin
+          Timeout.timeout(time_limit) do
+            i.write(input)
+            i.close
+            while !(o.eof? && e.eof?)
+              @stdout << o.read(4096).to_s
+              @stderr << e.read(4096).to_s
+            end
+            @status = w.value.exitstatus
+          end
+        rescue Timeout::Error
+          Process.kill('INT', w.pid)
+          @result_code = TIME_OUT_ERROR
+          return
         end
       end
 
@@ -56,8 +68,6 @@ module OnlineJudgeHelper
         else
           WRONG_ANSWER
         end
-    rescue Timeout::Error
-      @result_code = TIME_OUT_ERROR
     end
   end
 end

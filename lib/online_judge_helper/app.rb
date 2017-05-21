@@ -4,6 +4,7 @@ require 'sinatra/reloader'
 require 'pry'
 require 'fileutils'
 require 'hashie'
+require 'open3'
 
 module OnlineJudgeHelper
   class App < Sinatra::Base
