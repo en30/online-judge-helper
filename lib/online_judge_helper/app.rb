@@ -38,5 +38,17 @@ module OnlineJudgeHelper
       end
       200
     end
+
+    post '/graph' do
+      type, edge = params['directed'] == 'true' ? ['digraph', '->'] : ['graph', '--']
+      edges = params['adjacentList'].split(/\n/).map do |line|
+        vals = line.split(/\s+/)
+        "#{vals[0]} #{edge} #{vals[1]}" + (vals[2] ? "[label=#{vals[2]}]" : '')
+      end
+      dot = "#{type} { #{edges.join(';')} }"
+      o, e, s = Open3.capture3('dot -T png', stdin_data: dot)
+      content_type 'image/png'
+      o
+    end
   end
 end
