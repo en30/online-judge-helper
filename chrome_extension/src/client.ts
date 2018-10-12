@@ -1,0 +1,68 @@
+import axios from 'axios';
+
+interface TestCase {
+    title: string,
+    input: string,
+    output: string,
+}
+
+interface Restriction {
+    timeLimit: number
+}
+
+interface Problem {
+    site: string,
+    id: string,
+    testCases: Array<TestCase>,
+    restriction: Restriction
+}
+
+const client = axios.create();
+
+const appendButton = (document: Document) => {
+    const el = document.createElement('div');
+    el.textContent = 'solve';
+    el.style.cssText = `
+        cursor: pointer;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        padding: 1em 2em;
+        color: white;
+        background-color: rgba(0, 0, 255, .4);
+        z-index: 2147483647;
+    `;
+    document.body.appendChild(el);
+    return el;
+};
+
+const solve = async (data: Problem) => {
+    try {
+        const res = await client.post('http://localhost:4567/problem', data);
+        if (res.status == 0) {
+            alert('It seems that background server is not working');
+        }
+    } catch (err) {
+        alert(err);
+    }
+};
+
+type Parser = () => Problem;
+export const augment = (document: Document, parser: Parser) => {
+    const btn = appendButton(document);
+    btn.addEventListener('click', () => {
+        solve(parser());
+    });
+}
+
+export const createGraph = (directed: boolean) => async function(selection: Array<string>) {
+    try {
+        const res = await client.post(
+            'http://localhost:4567/graph',
+            { directed, adjacentList: selection[0] },
+            { responseType: 'blob' });
+        window.open(URL.createObjectURL(res.data));
+    } catch (err) {
+        alert(err);
+    }
+}

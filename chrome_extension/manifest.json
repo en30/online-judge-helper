@@ -2,35 +2,40 @@
   "manifest_version": 2,
   "name": "Online Judge Helper",
   "description": "",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "background": {
     "persistend": false,
-    "scripts": ["jquery.js", "background.js"]
+    "scripts": ["background.js"]
   },
   "permissions": [
     "contextMenus",
     "tabs",
     "http://localhost:4567/",
     "http://judge.u-aizu.ac.jp/onlinejudge/description*",
-    "http://*.contest.atcoder.jp/tasks/*",
-    "http://codeforces.com/problemset/problem/*"
+    "https://*.contest.atcoder.jp/tasks/*",
+    "https://beta.atcoder.jp/contests/*",
+    "https://codeforces.com/problemset/problem/*"
   ],
   "content_scripts": [
     {
       "matches": ["http://judge.u-aizu.ac.jp/onlinejudge/description*"],
-      "js": ["jquery.js", "client.js", "judge.u-aizu.ac.jp.js"]
+      "js": ["judge.u-aizu.ac.jp.js"]
     },
     {
-      "matches": ["http://*.contest.atcoder.jp/tasks/*"],
-      "js": ["jquery.js", "client.js", "contest.atcoder.jp.js"]
+      "matches": ["https://*.contest.atcoder.jp/tasks/*"],
+      "js": ["contest.atcoder.jp.js"]
+    },
+    {
+      "matches": ["https://beta.atcoder.jp/contests/*"],
+      "js": ["beta.atcoder.jp.js"]
     },
     {
       "matches": ["http://poj.org/problem?*"],
-      "js": ["jquery.js", "client.js", "poj.org.js"]
+      "js": ["poj.org.js"]
     },
     {
-      "matches": ["http://codeforces.com/problemset/problem/*"],
-      "js": ["jquery.js", "client.js", "codeforces.com.js"]
+      "matches": ["https://codeforces.com/problemset/problem/*"],
+      "js": ["codeforces.com.js"]
     }
   ]
 }

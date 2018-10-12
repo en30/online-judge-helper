@@ -1,0 +1,15 @@
+-------------------------------------
+{{template "status.tmpl" .Status}}: {{.TestCase.Title | yellow}}
+-------------------------------------
+{{with .Error -}}
+{{.Error | red}}
+{{ end }}
+{{- if not .Status.Success -}}
+{{cage "INPUT" .TestCase.Input}}
+
+{{cage "EXPECTED" .TestCase.Output }}
+
+{{cage "STDOUT" .Stdout.String}}
+
+{{cage "STDERR" .Stderr.String}}
+{{ end -}}

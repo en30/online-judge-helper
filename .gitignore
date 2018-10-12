@@ -50,4 +50,7 @@ Icon
 a.out
 problems/*
 tests/*
-chrome_extension/jquery.js
+chrome_extension/node_modules
+chrome_extension/dist
+online-judge-helper
+

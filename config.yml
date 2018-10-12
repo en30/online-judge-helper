@@ -1,8 +1,0 @@
-default_language: cpp
-editor: emacsclient --no-wait # if you not specify $EDITOR environment variable will be used
-languages:
-  rb: # key used for file extension
-    run: ruby
-  cpp:
-    run: ./a.out
-    compile: g++ --std=c++11 -W -Wall -Wno-sign-compare -O2 # if you need to compile

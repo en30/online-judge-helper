@@ -1,0 +1,5 @@
+{{if .Success -}}
+{{.String | green | bold}}
+{{- else -}}
+{{.String | red | bold}}
+{{- end -}}

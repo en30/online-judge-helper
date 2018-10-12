@@ -4,9 +4,8 @@ Online Judge Helper helps you to start solving online judge problems and to test
 ![Screen Cast](https://github.com/en30/online-judge-helper/raw/master/example.gif)
 
 ## Features
-- Small Sinatra app to automatically create program and test file
-- Google Chrome extension to communicate with the Sinatra app
-- Watch program and test files and run test when they are changed
+- Automatically create program and test file from problem description
+- Watch program files and run test when they are changed
 
 You can use Online Judge Helper's extension on the sites below.
 
@@ -17,16 +16,10 @@ You can use Online Judge Helper's extension on the sites below.
 
 ## Installation
 ```sh
-$ git clone htts://github.com/en30/online-judge-helper
-$ cd online-judge-helper
-$ bundle install
-$ bundle exec rake install
-# Drang and drop the chrome_extension directory to Google Chrome to install the extension
+TODO
 ```
 
 ## How to use
 ```sh
-$ cd $PATH_TO_ONLINE_JUDGE_HELPER
-$ emacs config.yml
-$ foreman start
+TODO
 ```

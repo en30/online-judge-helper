@@ -1,0 +1,9 @@
+=====================================
+{{template "status.tmpl" .Status}}: {{.Submission.Path | blue}}
+=====================================
+{{with .Error -}}
+{{.Error | red}}
+{{- end }}
+{{- range .Results}}
+{{- template "test_case_result.tmpl" . -}}
+{{end -}}
