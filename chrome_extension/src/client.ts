@@ -17,12 +17,14 @@ interface Problem {
     restriction: Restriction
 }
 
-const client = axios.create();
+const client = axios.create({
+    baseURL: 'http://localhost:4567'
+});
 
 const appendButton = (document: Document) => {
-    const el = document.createElement('div');
-    el.textContent = 'solve';
-    el.style.cssText = `
+    const e = document.createElement('button');
+    e.textContent = 'solve';
+    e.style.cssText = `
         cursor: pointer;
         position: fixed;
         left: 0;
@@ -32,13 +34,13 @@ const appendButton = (document: Document) => {
         background-color: rgba(0, 0, 255, .4);
         z-index: 2147483647;
     `;
-    document.body.appendChild(el);
-    return el;
+    document.body.appendChild(e);
+    return e
 };
 
 const solve = async (data: Problem) => {
     try {
-        const res = await client.post('http://localhost:4567/problem', data);
+        const res = await client.post('/problem', data);
         if (res.status == 0) {
             alert('It seems that background server is not working');
         }
@@ -58,7 +60,7 @@ export const augment = (document: Document, parser: Parser) => {
 export const createGraph = (directed: boolean) => async function(selection: Array<string>) {
     try {
         const res = await client.post(
-            'http://localhost:4567/graph',
+            '/graph',
             { directed, adjacentList: selection[0] },
             { responseType: 'blob' });
         window.open(URL.createObjectURL(res.data));
