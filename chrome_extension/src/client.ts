@@ -50,12 +50,23 @@ const solve = async (data: Problem) => {
 };
 
 type Parser = () => Problem;
-export const augment = (document: Document, parser: Parser) => {
-    const btn = appendButton(document);
-    btn.addEventListener('click', () => {
-        solve(parser());
+type Submitter = (submission: string) => void;
+export const augment = (document: Document, problem: Problem) => {
+    appendButton(document).addEventListener('click', () => {
+        solve(problem);
     });
 }
+
+const getSubmission = async (site: string, id: string): Promise<string> => {
+    const res = await client.get(`/submission?id=${id}&site=${site}`);
+    return res.data;
+}
+
+export const inject = async (input: HTMLInputElement, site: string, id: string) => {
+    const source = await getSubmission(site, id);
+    input.value = source;
+}
+
 
 export const createGraph = (directed: boolean) => async function(selection: Array<string>) {
     try {

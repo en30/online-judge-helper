@@ -22,8 +22,16 @@
       "js": ["judge.u-aizu.ac.jp.js"]
     },
     {
+      "matches": ["http://judge.u-aizu.ac.jp/onlinejudge/submission*"],
+      "js": ["judge.u-aizu.ac.jp.submission.js"]
+    },
+    {
       "matches": ["https://*.contest.atcoder.jp/tasks/*"],
       "js": ["contest.atcoder.jp.js"]
+    },
+    {
+      "matches": ["https://*.contest.atcoder.jp/submit*"],
+      "js": ["contest.atcoder.jp.submission.js"]
     },
     {
       "matches": ["https://beta.atcoder.jp/contests/*"],

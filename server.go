@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -63,8 +64,23 @@ func (s *Server) problemHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func (s *Server) submissionHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	q := r.URL.Query()
+	problem := Problem{Site: q["site"][0], Id: q["id"][0], Config: s.Config}
+	b, err := ioutil.ReadFile(problem.submissionPath())
+	if err != nil {
+		log.Println(err)
+	}
+	w.Write(b)
+}
+
 func (s *Server) launch() {
 	http.HandleFunc("/problem", withLog(s.problemHandler))
+	http.HandleFunc("/submission", withLog(s.submissionHandler))
 	log.Println("Start serving...")
 	log.Fatal(http.ListenAndServe(":4567", nil))
 }
