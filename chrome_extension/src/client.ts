@@ -57,10 +57,10 @@ export const augment = (document: Document, problem: Problem) => {
     });
 }
 
-export const inject = async (input: HTMLInputElement, site: string, id: string) => {
+export const inject = async (callback: (value: string) => void, site: string, id: string) => {
     const socket = new WebSocket(`ws://localhost:4567/submission?id=${id}&site=${site}`);
     socket.addEventListener("message", function(event) {
-        input.value = event.data;
+        callback(event.data);
     });
 }
 

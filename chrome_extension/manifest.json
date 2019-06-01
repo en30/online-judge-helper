@@ -16,6 +16,9 @@
     "https://beta.atcoder.jp/contests/*",
     "https://codeforces.com/problemset/problem/*"
   ],
+  "web_accessible_resources": [
+    "code_mirror.js"
+  ],
   "content_scripts": [
     {
       "matches": ["http://judge.u-aizu.ac.jp/onlinejudge/description*"],
@@ -34,8 +37,8 @@
       "js": ["contest.atcoder.jp.submission.js"]
     },
     {
-      "matches": ["https://beta.atcoder.jp/contests/*"],
-      "js": ["beta.atcoder.jp.js"]
+      "matches": ["https://atcoder.jp/contests/*"],
+      "js": ["atcoder.jp.js"]
     },
     {
       "matches": ["http://poj.org/problem?*"],
