@@ -74,7 +74,7 @@ func (t *Throttler) add(e *EventLog) {
 	t.events.Value = e
 }
 
-func watch(config *Config) {
+func watch(sc chan *Submission, config *Config) {
 	tmpl := template.New("test_result.tmpl")
 	tmpl, err := tmpl.Funcs(template.FuncMap{
 		"cage": func(title string, v string) string {
@@ -143,6 +143,7 @@ func watch(config *Config) {
 				if err != nil {
 					res = newFailedTestResult(IE, err)
 				} else {
+					sc <- s
 					res = s.test(config)
 				}
 				err = tmpl.Execute(os.Stdout, res)

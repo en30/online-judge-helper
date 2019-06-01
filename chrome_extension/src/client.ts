@@ -57,16 +57,12 @@ export const augment = (document: Document, problem: Problem) => {
     });
 }
 
-const getSubmission = async (site: string, id: string): Promise<string> => {
-    const res = await client.get(`/submission?id=${id}&site=${site}`);
-    return res.data;
-}
-
 export const inject = async (input: HTMLInputElement, site: string, id: string) => {
-    const source = await getSubmission(site, id);
-    input.value = source;
+    const socket = new WebSocket(`ws://localhost:4567/submission?id=${id}&site=${site}`);
+    socket.addEventListener("message", function(event) {
+        input.value = event.data;
+    });
 }
-
 
 export const createGraph = (directed: boolean) => async function(selection: Array<string>) {
     try {

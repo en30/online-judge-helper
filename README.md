@@ -6,6 +6,7 @@ Online Judge Helper helps you to start solving online judge problems and to test
 ## Features
 - Automatically create program and test file from problem description
 - Watch program files and run test when they are changed
+- Set source codes to submission textareas
 
 You can use Online Judge Helper's extension on the sites below.
 

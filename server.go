@@ -1,6 +1,8 @@
 package main
 
 import (
+	"golang.org/x/net/websocket"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -9,12 +11,18 @@ import (
 	"strings"
 )
 
+type ProblemKey struct {
+	Site string
+	Id   string
+}
+
 type Server struct {
-	Config *Config
+	Config      *Config
+	Connections map[ProblemKey]*websocket.Conn
 }
 
 func newServer(c *Config) *Server {
-	return &Server{Config: c}
+	return &Server{Config: c, Connections: make(map[ProblemKey]*websocket.Conn)}
 }
 
 func withLog(fn http.HandlerFunc) http.HandlerFunc {
@@ -70,12 +78,37 @@ func (s *Server) submissionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	q := r.URL.Query()
-	problem := Problem{Site: q["site"][0], Id: q["id"][0], Config: s.Config}
-	b, err := ioutil.ReadFile(problem.submissionPath())
+	key := ProblemKey{Site: q["site"][0], Id: q["id"][0]}
+	websocket.Handler(s.watchSubmissionHandler(key)).ServeHTTP(w, r)
+}
+
+func (s *Server) watchSubmissionHandler(key ProblemKey) func(ws *websocket.Conn) {
+	return func(ws *websocket.Conn) {
+		s.Connections[key] = ws
+		problem, err := loadProblem(key.Site, key.Id, s.Config)
+		if err != nil {
+			log.Fatal(err)
+		}
+		f, err := os.Open(problem.submissionPath())
+		if err != nil {
+			log.Println(err)
+		}
+		io.Copy(ws, f)
+		io.Copy(ioutil.Discard, ws)
+	}
+}
+
+func (s *Server) sendSubmission(sub *Submission) {
+	key := ProblemKey{Site: sub.Problem.Site, Id: sub.Problem.Id}
+	if s.Connections[key] == nil {
+		return
+	}
+	f, err := os.Open(sub.Path)
+	defer f.Close()
 	if err != nil {
 		log.Println(err)
 	}
-	w.Write(b)
+	io.Copy(s.Connections[key], f)
 }
 
 func (s *Server) launch() {

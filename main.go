@@ -9,8 +9,13 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	done := make(chan bool)
-	go watch(config)
-	go newServer(config).launch()
-	<-done
+	sc := make(chan *Submission)
+	server := newServer(config)
+	go watch(sc, config)
+	go server.launch()
+
+	for {
+		submission := <-sc
+		server.sendSubmission(submission)
+	}
 }
