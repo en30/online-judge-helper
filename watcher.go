@@ -12,12 +12,19 @@ import (
 	"time"
 )
 
-func watchRecursive(path string, watcher *fsnotify.Watcher) error {
-	return filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+func watchRecursive(basePath string, watcher *fsnotify.Watcher) error {
+	return filepath.Walk(basePath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
 		if !info.IsDir() {
+			return nil
+		}
+		rel, err := filepath.Rel(basePath, path)
+		if err != nil {
+			return err
+		}
+		if filepath.HasPrefix(rel, ".git") {
 			return nil
 		}
 		err = watcher.Add(path)
