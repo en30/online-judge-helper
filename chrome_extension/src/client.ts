@@ -57,10 +57,19 @@ export const augment = (document: Document, problem: Problem) => {
     });
 }
 
-export const inject = async (callback: (value: string) => void, site: string, id: string) => {
+export const inject = (callback: (value: string) => void, site: string, id: string) => {
     const socket = new WebSocket(`ws://localhost:4567/submission?id=${id}&site=${site}`);
     socket.addEventListener("message", function(event) {
         callback(event.data);
+    });
+    socket.addEventListener("close", function(event) {
+        setTimeout(() => {
+            inject(callback, site, id);
+        }, 1000)
+    });
+    socket.addEventListener("error", function(event) {
+        console.error(event);
+        socket.close();
     });
 }
 
