@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/en30/online-judge-helper#readme",
   "devDependencies": {
-    "@types/chrome": "^0.0.74",
+    "@types/chrome": "^0.0.86",
     "copy-webpack-plugin": "^5.0.3",
     "ts-loader": "^6.0.4",
     "typescript": "^3.5.3",
