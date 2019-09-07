@@ -20,6 +20,7 @@ type Config struct {
 	DefaultLanguage string `yaml:"default_language"`
 	Editor          string
 	Languages       map[string]LanguageConfig
+	IgnorePatterns  []string `yaml:"ignore"`
 }
 
 func baseDir() string {

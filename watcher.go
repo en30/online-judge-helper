@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func watchRecursive(basePath string, watcher *fsnotify.Watcher) error {
+func watchRecursive(basePath string, watcher *fsnotify.Watcher, config *Config) error {
 	return filepath.Walk(basePath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -26,6 +26,18 @@ func watchRecursive(basePath string, watcher *fsnotify.Watcher) error {
 		}
 		if filepath.HasPrefix(rel, ".git") {
 			return nil
+		}
+		for _, pat := range config.IgnorePatterns {
+			if filepath.HasPrefix(rel, pat) {
+				return nil
+			}
+			match, err := filepath.Match(pat, rel)
+			if err != nil {
+				return err
+			}
+			if match {
+				return nil
+			}
 		}
 		err = watcher.Add(path)
 		if err != nil {
@@ -116,7 +128,7 @@ func watch(sc chan *Submission, config *Config) {
 	defer watcher.Close()
 
 	log.Println("Start watching...")
-	err = watchRecursive(config.SolutionDir, watcher)
+	err = watchRecursive(config.SolutionDir, watcher, config)
 	if err != nil {
 		log.Fatal(err)
 	}
