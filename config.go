@@ -10,8 +10,9 @@ import (
 )
 
 type LanguageConfig struct {
-	Interpret string `yaml:",omitempty"`
-	Compile   string `yaml:",omitempty"`
+	Preprocess string `yaml:",omitempty"`
+	Interpret  string `yaml:",omitempty"`
+	Compile    string `yaml:",omitempty"`
 }
 
 type Config struct {

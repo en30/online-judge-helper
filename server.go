@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"golang.org/x/net/websocket"
 	"io"
 	"io/ioutil"
@@ -89,26 +90,32 @@ func (s *Server) watchSubmissionHandler(key ProblemKey) func(ws *websocket.Conn)
 		if err != nil {
 			log.Fatal(err)
 		}
-		f, err := os.Open(problem.submissionPath())
+		sub, err := newSubmission(problem.submissionPath(), s.Config)
 		if err != nil {
 			log.Println(err)
+			return
 		}
-		io.Copy(ws, f)
+		source, err := sub.preprocess(s.Config)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		ws.Write(source)
 		io.Copy(ioutil.Discard, ws)
 	}
 }
 
-func (s *Server) sendSubmission(sub *Submission) {
+func (s *Server) sendSubmission(sub *Submission, config *Config) error {
 	key := ProblemKey{Site: sub.Problem.Site, Id: sub.Problem.Id}
 	if s.Connections[key] == nil {
-		return
+		return errors.New("No connection for " + sub.Problem.Site + "/" + sub.Problem.Id)
 	}
-	f, err := os.Open(sub.Path)
-	defer f.Close()
+	source, err := sub.preprocess(config)
 	if err != nil {
-		log.Println(err)
+		return err
 	}
-	io.Copy(s.Connections[key], f)
+	s.Connections[key].Write(source)
+	return nil
 }
 
 func (s *Server) launch() {

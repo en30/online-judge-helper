@@ -16,6 +16,9 @@ func main() {
 
 	for {
 		submission := <-sc
-		server.sendSubmission(submission)
+		err = server.sendSubmission(submission, config)
+		if err != nil {
+			log.Println(err)
+		}
 	}
 }

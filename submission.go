@@ -58,8 +58,20 @@ func (s *Submission) test(config *Config) *TestResult {
 	var ex string
 	var args []string
 	var err error
+	source, err := s.preprocess(config)
+	if err != nil {
+		return newFailedTestResult(CE, err)
+	}
+
+	tmpfile, err := ioutil.TempFile(".", "*."+s.Ext)
+	if err != nil {
+		return newFailedTestResult(IE, err)
+	}
+	defer os.Remove(tmpfile.Name())
+	tmpfile.Write(source)
+
 	if config.Languages[s.Ext].Compile != "" {
-		ex, err = s.compile(config)
+		ex, err = s.compile(config, tmpfile.Name())
 		if ex != "" {
 			defer os.Remove(ex)
 		}
@@ -68,14 +80,37 @@ func (s *Submission) test(config *Config) *TestResult {
 		}
 	} else if config.Languages[s.Ext].Interpret != "" {
 		ex = config.Languages[s.Ext].Interpret
-		args = append(args, s.Path)
+		args = append(args, tmpfile.Name())
 	} else {
 		return newFailedTestResult(CE, errors.New("language config of "+s.Ext+" must have `interpret` or `compile`"))
 	}
 	return newTestResult(s, s.Problem.test(ex, args))
 }
 
-func (s *Submission) compile(config *Config) (string, error) {
+func (s *Submission) shouldPreprocess(config *Config) bool {
+	return config.Languages[s.Ext].Preprocess != ""
+}
+
+func (s *Submission) preprocess(config *Config) ([]byte, error) {
+	var res []byte
+	if !s.shouldPreprocess(config) {
+		f, err := os.Open(s.Path)
+		defer f.Close()
+		_, err = f.Read(res)
+		if err != nil {
+			return res, err
+		}
+		return res, nil
+	}
+
+	out, err := exec.Command(config.Languages[s.Ext].Preprocess, s.Path).CombinedOutput()
+	if err != nil {
+		return res, errors.New(err.Error() + "\n" + string(out))
+	}
+	return out, nil
+}
+
+func (s *Submission) compile(config *Config, path string) (string, error) {
 	log.Println("compilation start")
 	tmpfile, err := ioutil.TempFile(".", "")
 	if err != nil {
@@ -84,7 +119,7 @@ func (s *Submission) compile(config *Config) (string, error) {
 	tmpName := "." + string(filepath.Separator) + tmpfile.Name()
 	args := strings.Fields(config.Languages[s.Ext].Compile)
 	log.Println("\x1b[1m" + strings.Join(args, " ") + " TMP_FILE " + s.Path + "\x1b[0m")
-	args = append(args, tmpfile.Name(), s.Path)
+	args = append(args, tmpfile.Name(), path)
 	out, err := exec.Command(args[0], args[1:]...).CombinedOutput()
 	if err != nil {
 		return tmpName, errors.New(err.Error() + "\n" + string(out))
