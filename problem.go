@@ -137,18 +137,19 @@ type TestResult struct {
 	Status     Status
 	Results    []TestCaseResult
 	Error      error
+	SourcePath string
 }
 
 func newFailedTestResult(s Status, err error) *TestResult {
 	return &TestResult{Status: s, Error: err}
 }
 
-func newTestResult(sub *Submission, results []TestCaseResult) *TestResult {
+func newTestResult(sourcePath string, sub *Submission, results []TestCaseResult) *TestResult {
 	s := AC
 	for _, r := range results {
 		if s == AC && r.Status != AC {
 			s = r.Status
 		}
 	}
-	return &TestResult{Submission: *sub, Status: s, Results: results}
+	return &TestResult{Submission: *sub, Status: s, Results: results, SourcePath: sourcePath}
 }

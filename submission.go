@@ -54,6 +54,24 @@ func newSubmission(name string, config *Config) (*Submission, error) {
 		Problem: *p}, nil
 }
 
+func (s *Submission) writePreprocessedSource(config *Config, source []byte) (string, error) {
+	rel, err := filepath.Rel(config.SolutionDir, s.Path)
+	if err != nil {
+		return "", err
+	}
+	sourcePath := filepath.Join(config.SolutionDir, "tmp", rel)
+	err = os.MkdirAll(filepath.Dir(sourcePath), 0755)
+	if err != nil {
+		return "", err
+	}
+
+	err = ioutil.WriteFile(sourcePath, source, 0644)
+	if err != nil {
+		return "", err
+	}
+	return sourcePath, nil
+}
+
 func (s *Submission) test(config *Config) *TestResult {
 	var ex string
 	var args []string
@@ -63,15 +81,13 @@ func (s *Submission) test(config *Config) *TestResult {
 		return newFailedTestResult(CE, err)
 	}
 
-	tmpfile, err := ioutil.TempFile(".", "*."+s.Ext)
+	sourcePath, err := s.writePreprocessedSource(config, source)
 	if err != nil {
 		return newFailedTestResult(IE, err)
 	}
-	defer os.Remove(tmpfile.Name())
-	tmpfile.Write(source)
 
 	if config.Languages[s.Ext].Compile != "" {
-		ex, err = s.compile(config, tmpfile.Name())
+		ex, err = s.compile(config, sourcePath)
 		if ex != "" {
 			defer os.Remove(ex)
 		}
@@ -80,11 +96,11 @@ func (s *Submission) test(config *Config) *TestResult {
 		}
 	} else if config.Languages[s.Ext].Interpret != "" {
 		ex = config.Languages[s.Ext].Interpret
-		args = append(args, tmpfile.Name())
+		args = append(args, sourcePath)
 	} else {
 		return newFailedTestResult(CE, errors.New("language config of "+s.Ext+" must have `interpret` or `compile`"))
 	}
-	return newTestResult(s, s.Problem.test(ex, args))
+	return newTestResult(sourcePath, s, s.Problem.test(ex, args))
 }
 
 func (s *Submission) shouldPreprocess(config *Config) bool {

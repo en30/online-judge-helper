@@ -7,3 +7,8 @@
 {{- range .Results}}
 {{- template "test_case_result.tmpl" . -}}
 {{end -}}
+
+{{if ne .SourcePath "" }}
+[preprocessed source]
+{{.SourcePath | bold}}
+{{ end }}

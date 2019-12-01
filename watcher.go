@@ -27,6 +27,10 @@ func watchRecursive(basePath string, watcher *fsnotify.Watcher, config *Config) 
 		if filepath.HasPrefix(rel, ".git") {
 			return nil
 		}
+		if filepath.HasPrefix(rel, "tmp") {
+			return nil
+		}
+
 		for _, pat := range config.IgnorePatterns {
 			if filepath.HasPrefix(rel, pat) {
 				return nil
