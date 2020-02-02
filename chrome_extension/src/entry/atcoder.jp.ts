@@ -5,8 +5,11 @@ const id = location.pathname.split('/').pop();
 
 const timeLimit = parseInt(document.querySelector('#task-statement').previousElementSibling.textContent.match(/(\d+)\s*sec/)[1], 10) * 1e9;
 
+// ABC 009~?
+const normalizeNewline = (str: string) => str.trimRight() + "\n";
+
 const testCases = Array.from(document.querySelectorAll("h3")).reduce((a, el) => {
-    if (!el.textContent.match(/入力例/)) return a;
+    if (!el.textContent.match(/入力例|Sample Input/)) return a;
     const title = el.childNodes[0].textContent;
     const input = el.parentElement.querySelector('pre:last-of-type');
     let e = input.closest('.part').nextElementSibling;
@@ -15,7 +18,7 @@ const testCases = Array.from(document.querySelectorAll("h3")).reduce((a, el) => 
     a.push({
         title,
         input: input.textContent,
-        output: output.textContent,
+        output: normalizeNewline(output.textContent),
     });
     return a;
 }, []);
