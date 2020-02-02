@@ -40,6 +40,7 @@ const appendButton = (document: Document) => {
 
 const solve = async (data: Problem) => {
     try {
+        if (process.env.NODE_ENV !== 'production') console.log(data);
         const res = await client.post('/problem', data);
         if (res.status == 0) {
             alert('It seems that background server is not working');
