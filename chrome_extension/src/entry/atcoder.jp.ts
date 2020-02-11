@@ -12,8 +12,15 @@ const testCases = Array.from(document.querySelectorAll("h3")).reduce((a, el) => 
     if (!el.textContent.match(/入力例|Sample Input/)) return a;
     const title = el.childNodes[0].textContent;
     const input = el.parentElement.querySelector('pre:last-of-type');
-    let e = input.closest('.part').nextElementSibling;
-    while (!e.classList.contains('part')) e = e.nextElementSibling;
+    let e = input.closest('.part');
+    if (e) {
+        e = e.nextElementSibling;
+        while (!e.classList.contains('part')) e = e.nextElementSibling;
+    } else {
+        // ABC034
+        e = input.closest('section');
+        e = e.nextElementSibling;
+    }
     const output = e.querySelector('pre[id^=for_copy],pre[id^=pre-sample],pre:last-of-type');
     a.push({
         title,
