@@ -20,7 +20,8 @@
     "https://leetcode.com/contest/*"
   ],
   "web_accessible_resources": [
-    "code_mirror.js"
+    "code_mirror.js",
+    "ace.js"
   ],
   "content_scripts": [
     {
@@ -54,6 +55,10 @@
     {
       "matches": ["*://codeforces.com/contest/*/problem/*"],
       "js": ["codeforces.com.contest.js"]
+    },
+    {
+      "matches": ["https://yukicoder.me/problems/*"],
+      "js": ["yukicoder.me.js"]
     }
   ]
 }
